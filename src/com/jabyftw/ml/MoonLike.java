@@ -2,7 +2,6 @@ package com.jabyftw.ml;
 
 import java.util.logging.Level;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -78,8 +77,8 @@ public class MoonLike extends JavaPlugin implements Listener {
             p.getEquipment().setChestplate(chest);
             p.getEquipment().setLeggings(pants);
             p.getEquipment().setBoots(boots);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
         }
+        p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
     }
 
     @EventHandler
@@ -90,8 +89,8 @@ public class MoonLike extends JavaPlugin implements Listener {
             p.getEquipment().setChestplate(chest);
             p.getEquipment().setLeggings(pants);
             p.getEquipment().setBoots(boots);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
         }
+        p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
     }
 
     @EventHandler
