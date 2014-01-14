@@ -23,7 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class MoonLike extends JavaPlugin implements Listener {
 
     private FileConfiguration config;
-    private boolean equipOnJoin;
+    private boolean equipOnJoin, equipOnRespawn;
     private ItemStack head, chest, pants, boots;
 
     @Override
@@ -32,6 +32,7 @@ public class MoonLike extends JavaPlugin implements Listener {
         config.addDefault("config.damageTickDelay", 10);
         config.addDefault("config.playerVacumDamage", 2.0D);
         config.addDefault("config.equipOnJoin", true);
+        config.addDefault("config.equipOnRespawn", true);
         config.addDefault("armor.head", "GLASS");
         config.addDefault("armor.chest", "CHAINMAIL_CHESTPLATE");
         config.addDefault("armor.pants", "IRON_LEGGINGS");
@@ -40,6 +41,7 @@ public class MoonLike extends JavaPlugin implements Listener {
         saveConfig();
         reloadConfig();
         equipOnJoin = config.getBoolean("config.equipOnJoin");
+        equipOnRespawn  = config.getBoolean("config.equipOnRespawn");
         head = new ItemStack(Material.valueOf(config.getString("armor.head").toUpperCase()), 1);
         chest = new ItemStack(Material.valueOf(config.getString("armor.chest").toUpperCase()), 1);
         pants = new ItemStack(Material.valueOf(config.getString("armor.pants").toUpperCase()), 1);
@@ -73,10 +75,18 @@ public class MoonLike extends JavaPlugin implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (equipOnJoin) {
-            p.getEquipment().setHelmet(head);
-            p.getEquipment().setChestplate(chest);
-            p.getEquipment().setLeggings(pants);
-            p.getEquipment().setBoots(boots);
+            if (p.getEquipment().getHelmet() == null) {
+                p.getEquipment().setHelmet(head);
+            }
+            if (p.getEquipment().getChestplate() == null) {
+                p.getEquipment().setChestplate(chest);
+            }
+            if (p.getEquipment().getLeggings() == null) {
+                p.getEquipment().setLeggings(pants);
+            }
+            if (p.getEquipment().getBoots() == null) {
+                p.getEquipment().setBoots(boots);
+            }
         }
         p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
     }
@@ -84,11 +94,19 @@ public class MoonLike extends JavaPlugin implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
-        if (equipOnJoin) {
-            p.getEquipment().setHelmet(head);
-            p.getEquipment().setChestplate(chest);
-            p.getEquipment().setLeggings(pants);
-            p.getEquipment().setBoots(boots);
+        if (equipOnRespawn) {
+            if (p.getEquipment().getHelmet() == null) {
+                p.getEquipment().setHelmet(head);
+            }
+            if (p.getEquipment().getChestplate() == null) {
+                p.getEquipment().setChestplate(chest);
+            }
+            if (p.getEquipment().getLeggings() == null) {
+                p.getEquipment().setLeggings(pants);
+            }
+            if (p.getEquipment().getBoots() == null) {
+                p.getEquipment().setBoots(boots);
+            }
         }
         p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
     }
