@@ -21,12 +21,12 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author Rafael
  */
 public class MoonLike extends JavaPlugin implements Listener {
-    
+
     private FileConfiguration config;
     private World world;
     private boolean equipOnJoin;
     private ItemStack head, chest, pants, boots;
-    
+
     @Override
     public void onEnable() {
         config = getConfig();
@@ -49,23 +49,25 @@ public class MoonLike extends JavaPlugin implements Listener {
         boots = new ItemStack(Material.valueOf(config.getString("armor.boots").toUpperCase()), 1);
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new BukkitRunnable() {
-            
+
             @Override
             public void run() {
                 for (Player p : world.getPlayers()) {
-                    if (!p.getEquipment().getHelmet().getType().equals(head.getType())) {
-                        p.damage(config.getDouble("config.playerVacumDamage"));
+                    if (p.getEquipment().getHelmet() != null) {
+                        if (!p.getEquipment().getHelmet().getType().equals(head.getType())) {
+                            p.damage(config.getDouble("config.playerVacumDamage"));
+                        }
                     }
                 }
             }
         }, config.getInt("config.damageTickDelay"), config.getInt("config.damageTickDelay"));
     }
-    
+
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
     }
-    
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -79,7 +81,7 @@ public class MoonLike extends JavaPlugin implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
@@ -93,17 +95,17 @@ public class MoonLike extends JavaPlugin implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         checkPlayer(e.getPlayer());
     }
-    
+
     @EventHandler
     public void onKick(PlayerKickEvent e) {
         checkPlayer(e.getPlayer());
     }
-    
+
     private void checkPlayer(Player player) {
         player.removePotionEffect(PotionEffectType.JUMP);
     }
