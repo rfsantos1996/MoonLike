@@ -1,5 +1,6 @@
 package com.jabyftw.ml;
 
+import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,14 +24,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class MoonLike extends JavaPlugin implements Listener {
 
     private FileConfiguration config;
-    private World world;
     private boolean equipOnJoin;
     private ItemStack head, chest, pants, boots;
 
     @Override
     public void onEnable() {
         config = getConfig();
-        config.addDefault("config.worldName", "world");
         config.addDefault("config.damageTickDelay", 10);
         config.addDefault("config.playerVacumDamage", 2.0D);
         config.addDefault("config.equipOnJoin", true);
@@ -41,8 +40,7 @@ public class MoonLike extends JavaPlugin implements Listener {
         config.options().copyDefaults(true);
         saveConfig();
         reloadConfig();
-        world = getServer().getWorld(config.getString("config.worldName"));
-        equipOnJoin = config.getBoolean("armor.equipOnJoin");
+        equipOnJoin = config.getBoolean("config.equipOnJoin");
         head = new ItemStack(Material.valueOf(config.getString("armor.head").toUpperCase()), 1);
         chest = new ItemStack(Material.valueOf(config.getString("armor.chest").toUpperCase()), 1);
         pants = new ItemStack(Material.valueOf(config.getString("armor.pants").toUpperCase()), 1);
@@ -52,33 +50,35 @@ public class MoonLike extends JavaPlugin implements Listener {
 
             @Override
             public void run() {
-                for (Player p : world.getPlayers()) {
+                for (Player p : getServer().getOnlinePlayers()) {
                     if (p.getEquipment().getHelmet() != null) {
                         if (!p.getEquipment().getHelmet().getType().equals(head.getType())) {
                             p.damage(config.getDouble("config.playerVacumDamage"));
                         }
+                    } else {
+                        p.damage(config.getDouble("config.playerVacumDamage"));
                     }
                 }
             }
         }, config.getInt("config.damageTickDelay"), config.getInt("config.damageTickDelay"));
+        getLogger().log(Level.INFO, "Enabled.");
     }
 
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
+        getLogger().log(Level.INFO, "Disabled.");
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (equipOnJoin) {
-            if (p.getWorld().equals(world)) {
-                p.getEquipment().setHelmet(head);
-                p.getEquipment().setChestplate(chest);
-                p.getEquipment().setLeggings(pants);
-                p.getEquipment().setBoots(boots);
-                p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
-            }
+            p.getEquipment().setHelmet(head);
+            p.getEquipment().setChestplate(chest);
+            p.getEquipment().setLeggings(pants);
+            p.getEquipment().setBoots(boots);
+            p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
         }
     }
 
@@ -86,13 +86,11 @@ public class MoonLike extends JavaPlugin implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
         if (equipOnJoin) {
-            if (p.getWorld().equals(world)) {
-                p.getEquipment().setHelmet(head);
-                p.getEquipment().setChestplate(chest);
-                p.getEquipment().setLeggings(pants);
-                p.getEquipment().setBoots(boots);
-                p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
-            }
+            p.getEquipment().setHelmet(head);
+            p.getEquipment().setChestplate(chest);
+            p.getEquipment().setLeggings(pants);
+            p.getEquipment().setBoots(boots);
+            p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
         }
     }
 
